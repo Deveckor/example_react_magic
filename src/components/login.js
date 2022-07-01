@@ -33,16 +33,24 @@ const Login = () => {
       });
 
       // Validate didToken with server
-      const res = await fetch(process.env.REACT_APP_SERVER_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + didToken,
-        },
-      });
-      let json = await res.json();
-      console.log(json.token);
-      if (res.status === 200) {
+      const mutation = gql`
+      mutation($didToken: String!){
+  authMagicLink(didToken: $didToken){
+    token
+    authenticated
+  }
+}
+    `;
+    const variables = {
+      
+
+        "didToken": didToken
+      
+    }
+      const mutationData = await client.request(mutation, variables)
+      console.log(mutationData);
+
+      if (mutationData) {
         const query = gql`
         query {
           findUserById {
@@ -52,7 +60,7 @@ const Login = () => {
         }
       `;
       const requestHeaders = {
-        authorization: json.token,
+        authorization: mutationData.authMagicLink.token,
       };
 
       const data = await client.request(query, {}, requestHeaders);
