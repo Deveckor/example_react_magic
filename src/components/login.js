@@ -25,13 +25,13 @@ const Login = () => {
   async function handleLoginWithEmail(email) {
     try {
       setDisabled(true); // disable login button to prevent multiple emails from being triggered
-
+      
       // Trigger Magic link to be sent to user
       let didToken = await magic.auth.loginWithMagicLink({
         email,
         redirectURI: new URL('/callback', window.location.origin).href, // optional redirect back to your app after magic link is clicked
       });
-
+      console.log(didToken);
       // Validate didToken with server
       const mutation = gql`
       mutation($didToken: String!){
@@ -56,6 +56,7 @@ const Login = () => {
           findUserById {
             id
             email
+            
           }
         }
       `;

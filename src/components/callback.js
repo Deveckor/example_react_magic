@@ -60,7 +60,7 @@ const Callback = (props) => {
       const requestHeaders = {
         authorization: mutationData.authMagicLink.token,
       };
-
+      
       const data = await client.request(query, {}, requestHeaders);
       console.log(data);
 
